@@ -25,7 +25,7 @@ export function AssetCard(props: Props) {
   const {
     asset,
     quantity,
-    avgBuyPrice,
+    costBasis,
     currentPrice,
     currentValue,
     pnlAbsolute,
@@ -69,8 +69,8 @@ export function AssetCard(props: Props) {
           <p className="font-mono text-foreground">{formatUSD(currentPrice)}</p>
         </div>
         <div className="text-right">
-          <p className="text-muted-foreground">Precio promedio</p>
-          <p className="font-mono text-foreground">{formatUSD(avgBuyPrice)}</p>
+          <p className="text-muted-foreground">Invertido</p>
+          <p className="font-mono text-foreground">{formatUSD(costBasis)}</p>
         </div>
       </div>
     </div>
