@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { db } from "@/lib/db";
 import { transactions, assets } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
@@ -5,7 +6,7 @@ import { getPrices } from "@/lib/coingecko/client";
 import { calcAvgBuyPrice, calcUnrealizedPnl } from "@/lib/utils/pnl";
 import type { PortfolioData, Holding } from "../types";
 
-export async function getPortfolio(userId: string): Promise<PortfolioData> {
+export const getPortfolio = cache(async (userId: string): Promise<PortfolioData> => {
   const rows = await db
     .select({
       type: transactions.type,
@@ -104,4 +105,4 @@ export async function getPortfolio(userId: string): Promise<PortfolioData> {
     totalPnlPercent,
     holdings,
   };
-}
+});
