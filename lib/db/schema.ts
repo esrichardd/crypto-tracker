@@ -92,6 +92,58 @@ export const priceSnapshots = pgTable(
   }),
 );
 
+// --- User Profiles ---
+
+export const genderEnum = pgEnum("gender", [
+  "male",
+  "female",
+  "other",
+  "prefer_not_to_say",
+]);
+
+export const userProfiles = pgTable("user_profiles", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => createId()),
+  userId: text("user_id").notNull().unique(),
+  firstName: text("first_name"),
+  lastName: text("last_name"),
+  dateOfBirth: text("date_of_birth"), // ISO date string: 'YYYY-MM-DD'
+  gender: genderEnum("gender"),
+  country: text("country"), // ISO 3166-1 alpha-2 code: 'MX', 'US', etc.
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+});
+
+// --- Exchange API Keys ---
+
+export const exchangeApiKeys = pgTable(
+  "exchange_api_keys",
+  {
+    id: text("id")
+      .primaryKey()
+      .$defaultFn(() => createId()),
+    userId: text("user_id").notNull(),
+    exchange: text("exchange").notNull().default("binance"),
+    apiKeyEncrypted: text("api_key_encrypted").notNull(),
+    apiKeyHint: text("api_key_hint").notNull(), // last 4 chars, shown in UI
+    apiSecretEncrypted: text("api_secret_encrypted").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => ({
+    userExchangeUnique: unique().on(table.userId, table.exchange),
+  }),
+);
+
 // --- Inferred Types ---
 
 export type Asset = typeof assets.$inferSelect;

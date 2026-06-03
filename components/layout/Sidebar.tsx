@@ -1,9 +1,10 @@
 import Link from "next/link";
-import { LayoutDashboard, ArrowLeftRight } from "lucide-react";
+import { LayoutDashboard, ArrowLeftRight, UserCircle } from "lucide-react";
 
 const NAV = [
   { href: "/", label: "Portfolio", icon: LayoutDashboard },
   { href: "/transactions", label: "Transacciones", icon: ArrowLeftRight },
+  { href: "/perfil", label: "Perfil", icon: UserCircle },
 ];
 
 export function Sidebar() {
