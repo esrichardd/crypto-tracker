@@ -20,7 +20,16 @@ export async function AssetCardsData() {
   return (
     <>
       {portfolio.holdings.map((holding) => (
-        <AssetCard key={holding.asset.id} data={holding} />
+        <AssetCard
+          key={holding.asset.id}
+          data={{
+            ...holding,
+            allocationPercent:
+              portfolio.totalValueUsd > 0
+                ? (holding.currentValue / portfolio.totalValueUsd) * 100
+                : 0,
+          }}
+        />
       ))}
     </>
   );
