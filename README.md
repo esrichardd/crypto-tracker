@@ -1,36 +1,85 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Crypto Tracker
+
+A personal crypto portfolio tracker with a dark, Binance-inspired UI. Track your holdings, log transactions, and monitor real-time prices — all in one place.
+
+## Features
+
+- Portfolio overview with total value and P&L
+- Per-asset holdings and performance
+- Transaction history (buy/sell)
+- Live prices via CoinGecko API (auto-refresh every 60s)
+- Authentication via Neon Auth
+
+## Stack
+
+| Layer         | Tech                        |
+| ------------- | --------------------------- |
+| Framework     | Next.js 16 (App Router)     |
+| Language      | TypeScript (strict)         |
+| Styling       | Tailwind CSS v4 + shadcn/ui |
+| Database      | Neon Postgres + Drizzle ORM |
+| Auth          | Neon Auth (Better Auth)     |
+| Data fetching | TanStack Query v5           |
+| Validation    | Zod                         |
+| Prices        | CoinGecko API (free tier)   |
 
 ## Getting Started
 
-First, run the development server:
+### 1. Install dependencies
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+pnpm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Set up environment variables
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Create a `.env.local` file at the root:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```env
+# Neon Postgres connection string
+DATABASE_URL=
 
-## Learn More
+# Public URL of the app (used for redirects and OAuth callbacks)
+NEXT_PUBLIC_APP_URL=
 
-To learn more about Next.js, take a look at the following resources:
+# Neon Auth base URL (from your Neon project auth settings)
+NEON_AUTH_BASE_URL=
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+# Secret used to sign session cookies (min 32 chars)
+NEON_AUTH_COOKIE_SECRET=
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+# 32-byte hex key for AES-256-GCM encryption of exchange API keys
+# Generate with: openssl rand -hex 32
+ENCRYPTION_KEY=
+```
 
-## Deploy on Vercel
+### 3. Push the database schema
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+pnpm drizzle-kit push
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### 4. (Optional) Seed the database
+
+```bash
+pnpm db:seed
+```
+
+### 5. Run the dev server
+
+```bash
+pnpm dev
+```
+
+Open [http://localhost:3000](http://localhost:3000).
+
+## Useful Commands
+
+| Command                   | Description                        |
+| ------------------------- | ---------------------------------- |
+| `pnpm dev`                | Start local dev server             |
+| `pnpm build`              | Production build                   |
+| `pnpm lint`               | Run ESLint                         |
+| `pnpm drizzle-kit push`   | Apply schema changes to Neon       |
+| `pnpm drizzle-kit studio` | Open Drizzle visual DB editor      |
+| `pnpm db:seed`            | Seed the database with sample data |
