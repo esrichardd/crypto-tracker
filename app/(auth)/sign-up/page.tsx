@@ -1,9 +1,20 @@
+import { AuthLayout } from "@/features/auth/components/AuthLayout";
 import { SignUpForm } from "@/features/auth/components/SignUpForm";
 
 export default function SignUpPage() {
   return (
-    <main className="flex min-h-screen items-center justify-center bg-background">
+    <AuthLayout
+      badge="Gratis para siempre"
+      headline={
+        <>
+          Empieza a trackear
+          <br />
+          <span className="text-primary">en 30 segundos.</span>
+        </>
+      }
+      subheadline="Crea tu cuenta y conecta tu portafolio. Sin tarjeta de crédito, sin límites de activos."
+    >
       <SignUpForm />
-    </main>
+    </AuthLayout>
   );
 }
