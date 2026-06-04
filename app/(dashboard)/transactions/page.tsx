@@ -5,14 +5,22 @@ import { Button } from "@/components/ui/button";
 import { TransactionFilters } from "@/features/transactions/components/TransactionFilters";
 import { TransactionTable } from "@/features/transactions/components/TransactionTable";
 import { TransactionTableServer } from "@/features/transactions/components/TransactionTableServer";
+import { TransactionStats } from "@/features/transactions/components/TransactionStats";
 import type { TransactionFilters as Filters } from "@/features/transactions/types";
+
+const VALID_TYPES = ["buy", "sell"] as const;
+const VALID_SOURCES = ["manual", "binance", "csv"] as const;
+const VALID_SORTS = ["fecha_desc", "fecha_asc", "total_desc", "total_asc"] as const;
 
 type PageProps = {
   searchParams: Promise<{
     assetId?: string;
     type?: string;
+    source?: string;
     from?: string;
     to?: string;
+    search?: string;
+    sortBy?: string;
     page?: string;
   }>;
 };
@@ -22,23 +30,34 @@ export default async function TransactionsPage({ searchParams }: PageProps) {
 
   const filters: Filters = {
     assetId: params.assetId,
-    type:
-      params.type === "buy" || params.type === "sell" ? params.type : undefined,
+    type: (VALID_TYPES as readonly string[]).includes(params.type ?? "")
+      ? (params.type as Filters["type"])
+      : undefined,
+    source: (VALID_SOURCES as readonly string[]).includes(params.source ?? "")
+      ? (params.source as Filters["source"])
+      : undefined,
     from: params.from,
     to: params.to,
+    search: params.search,
+    sortBy: (VALID_SORTS as readonly string[]).includes(params.sortBy ?? "")
+      ? (params.sortBy as Filters["sortBy"])
+      : undefined,
     page: params.page ? Number(params.page) : 1,
   };
 
   return (
-    <div className="flex flex-col gap-6 p-6">
+    <div className="flex flex-col gap-4 p-4 md:gap-6 md:p-6">
+      {/* Header */}
       <div className="flex items-center justify-between">
-        <h1 className="text-xl font-semibold text-foreground">Transacciones</h1>
+        <h1 className="text-base font-semibold text-foreground md:text-xl">
+          Transacciones
+        </h1>
         <div className="flex items-center gap-2">
           <Link href="/transactions/import">
             <Button
               size="sm"
               variant="outline"
-              className="flex items-center gap-2"
+              className="hidden items-center gap-2 sm:flex"
             >
               <Upload size={14} />
               Importar Excel
@@ -47,14 +66,24 @@ export default async function TransactionsPage({ searchParams }: PageProps) {
           <Link href="/transactions/new">
             <Button size="sm" className="flex items-center gap-2">
               <Plus size={14} />
-              Nueva transacción
+              <span className="hidden sm:inline">Nueva transacción</span>
+              <span className="sm:hidden">Nueva</span>
             </Button>
           </Link>
         </div>
       </div>
 
+      {/* Stats */}
+      <Suspense
+        fallback={<TransactionStats skeleton />}
+      >
+        <TransactionStats filters={filters} />
+      </Suspense>
+
+      {/* Filters */}
       <TransactionFilters current={filters} />
 
+      {/* Table */}
       <Suspense fallback={<TransactionTable skeleton />}>
         <TransactionTableServer filters={filters} />
       </Suspense>

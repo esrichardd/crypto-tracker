@@ -1,8 +1,11 @@
 export type TransactionFilters = {
   assetId?: string;
   type?: "buy" | "sell";
+  source?: "manual" | "binance" | "csv";
   from?: string;
   to?: string;
+  search?: string;
+  sortBy?: "fecha_desc" | "fecha_asc" | "total_desc" | "total_asc";
   page?: number;
   limit?: number;
 };
