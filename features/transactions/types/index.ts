@@ -25,6 +25,20 @@ export type TransactionRow = {
   };
 };
 
+// Row after client-side parsing and validation
+export type ImportPreviewRow = {
+  rowIndex: number; // 1-based row number in the Excel (for error messages)
+  symbol: string;
+  type: "buy" | "sell";
+  priceUsd: string;
+  quantity: string;
+  fee: string;
+  date: string; // ISO string after normalisation
+  notes: string;
+  assetId: string | null; // null = symbol not found in catalog
+  error: string | null; // human-readable validation error, null = valid
+};
+
 export type CreateTransactionInput = {
   assetId: string;
   type: "buy" | "sell";

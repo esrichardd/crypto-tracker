@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import Link from "next/link";
-import { Plus } from "lucide-react";
+import { Plus, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { TransactionFilters } from "@/features/transactions/components/TransactionFilters";
 import { TransactionTable } from "@/features/transactions/components/TransactionTable";
@@ -33,12 +33,24 @@ export default async function TransactionsPage({ searchParams }: PageProps) {
     <div className="flex flex-col gap-6 p-6">
       <div className="flex items-center justify-between">
         <h1 className="text-xl font-semibold text-foreground">Transacciones</h1>
-        <Link href="/transactions/new">
-          <Button size="sm" className="flex items-center gap-2">
-            <Plus size={14} />
-            Nueva transacción
-          </Button>
-        </Link>
+        <div className="flex items-center gap-2">
+          <Link href="/transactions/import">
+            <Button
+              size="sm"
+              variant="outline"
+              className="flex items-center gap-2"
+            >
+              <Upload size={14} />
+              Importar Excel
+            </Button>
+          </Link>
+          <Link href="/transactions/new">
+            <Button size="sm" className="flex items-center gap-2">
+              <Plus size={14} />
+              Nueva transacción
+            </Button>
+          </Link>
+        </div>
       </div>
 
       <TransactionFilters current={filters} />
