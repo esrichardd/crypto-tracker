@@ -1,11 +1,14 @@
 import { Suspense } from "react";
 import Link from "next/link";
-import { Plus, Upload } from "lucide-react";
+import { Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { db } from "@/lib/db";
+import { assets } from "@/lib/db/schema";
 import { TransactionFilters } from "@/features/transactions/components/TransactionFilters";
 import { TransactionTable } from "@/features/transactions/components/TransactionTable";
 import { TransactionTableServer } from "@/features/transactions/components/TransactionTableServer";
 import { TransactionStats } from "@/features/transactions/components/TransactionStats";
+import { TransactionSheet } from "@/features/transactions/components/TransactionSheet";
 import type { TransactionFilters as Filters } from "@/features/transactions/types";
 
 const VALID_TYPES = ["buy", "sell"] as const;
@@ -26,7 +29,10 @@ type PageProps = {
 };
 
 export default async function TransactionsPage({ searchParams }: PageProps) {
-  const params = await searchParams;
+  const [params, assetList] = await Promise.all([
+    searchParams,
+    db.select().from(assets).orderBy(assets.symbol),
+  ]);
 
   const filters: Filters = {
     assetId: params.assetId,
@@ -63,20 +69,12 @@ export default async function TransactionsPage({ searchParams }: PageProps) {
               Importar Excel
             </Button>
           </Link>
-          <Link href="/transactions/new">
-            <Button size="sm" className="flex items-center gap-2">
-              <Plus size={14} />
-              <span className="hidden sm:inline">Nueva transacción</span>
-              <span className="sm:hidden">Nueva</span>
-            </Button>
-          </Link>
+          <TransactionSheet assets={assetList} />
         </div>
       </div>
 
       {/* Stats */}
-      <Suspense
-        fallback={<TransactionStats skeleton />}
-      >
+      <Suspense fallback={<TransactionStats skeleton />}>
         <TransactionStats filters={filters} />
       </Suspense>
 
