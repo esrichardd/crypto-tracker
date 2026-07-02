@@ -86,3 +86,14 @@ export function formatDateOnly(value: string | Date): string {
     day: "numeric",
   });
 }
+
+export function daysBetweenDateOnly(from: string, to: string): number {
+  if (!isDateOnlyString(from) || !isDateOnlyString(to)) return 0;
+
+  const [fromYear, fromMonth, fromDay] = from.split("-").map(Number);
+  const [toYear, toMonth, toDay] = to.split("-").map(Number);
+  const fromUtc = Date.UTC(fromYear, fromMonth - 1, fromDay);
+  const toUtc = Date.UTC(toYear, toMonth - 1, toDay);
+
+  return Math.max(0, Math.floor((toUtc - fromUtc) / 86_400_000));
+}

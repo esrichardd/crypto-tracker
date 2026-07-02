@@ -2,12 +2,13 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, ArrowLeftRight, UserCircle } from "lucide-react";
+import { LayoutDashboard, ArrowLeftRight, Target, UserCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const NAV = [
   { href: "/", label: "Portfolio", icon: LayoutDashboard },
   { href: "/transactions", label: "Transacciones", icon: ArrowLeftRight },
+  { href: "/opportunities", label: "Oportun.", icon: Target },
   { href: "/perfil", label: "Perfil", icon: UserCircle },
 ];
 

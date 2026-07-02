@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, ArrowLeftRight, UserCircle } from "lucide-react";
+import { LayoutDashboard, ArrowLeftRight, Target, UserCircle } from "lucide-react";
 import type { ComponentType } from "react";
 
 type RouteConfig = {
@@ -14,6 +14,7 @@ const ROUTES: Record<string, RouteConfig> = {
   "/transactions": { label: "Transacciones", icon: ArrowLeftRight },
   "/transactions/new": { label: "Nueva transacción", icon: ArrowLeftRight },
   "/transactions/import": { label: "Importar transacciones", icon: ArrowLeftRight },
+  "/opportunities": { label: "Oportunidades", icon: Target },
   "/perfil": { label: "Perfil", icon: UserCircle },
 };
 

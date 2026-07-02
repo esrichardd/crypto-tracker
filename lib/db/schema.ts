@@ -145,6 +145,27 @@ export const exchangeApiKeys = pgTable(
   }),
 );
 
+// --- Opportunity Settings ---
+
+export const opportunitySettings = pgTable("opportunity_settings", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => createId()),
+  userId: text("user_id").notNull().unique(),
+  targetRoiPercent: numeric("target_roi_percent", {
+    precision: 8,
+    scale: 2,
+  })
+    .default("20")
+    .notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+});
+
 // --- Inferred Types ---
 
 export type Asset = typeof assets.$inferSelect;
@@ -155,3 +176,6 @@ export type NewTransaction = typeof transactions.$inferInsert;
 
 export type PriceSnapshot = typeof priceSnapshots.$inferSelect;
 export type NewPriceSnapshot = typeof priceSnapshots.$inferInsert;
+
+export type OpportunitySettings = typeof opportunitySettings.$inferSelect;
+export type NewOpportunitySettings = typeof opportunitySettings.$inferInsert;
