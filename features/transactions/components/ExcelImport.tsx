@@ -14,6 +14,11 @@ import {
   X,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import {
+  dateOnlyFromParts,
+  formatDateOnly,
+  normalizeDateOnlyInput,
+} from "@/lib/utils/dates";
 import { formatUSD, formatCrypto } from "@/lib/utils/formatters";
 import type { Asset } from "@/lib/db/schema";
 import type { ImportPreviewRow } from "../types";
@@ -35,11 +40,9 @@ function normaliseDate(raw: unknown): string | null {
   if (typeof raw === "number") {
     const date = XLSX.SSF.parse_date_code(raw);
     if (!date) return null;
-    return new Date(Date.UTC(date.y, date.m - 1, date.d)).toISOString();
+    return dateOnlyFromParts(date.y, date.m, date.d);
   }
-  const parsed = new Date(String(raw));
-  if (isNaN(parsed.getTime())) return null;
-  return parsed.toISOString();
+  return normalizeDateOnlyInput(raw);
 }
 
 function normaliseNumber(raw: unknown): string | null {
@@ -474,11 +477,7 @@ function ExcelImportInner({ assets }: { assets: Asset[] }) {
               {!row.error && <TypeBadge type={row.type} />}
               {row.date && !row.error && (
                 <span className="ml-auto text-[10px] text-secondary">
-                  {new Date(row.date).toLocaleDateString("es-MX", {
-                    day: "numeric",
-                    month: "short",
-                    year: "numeric",
-                  })}
+                  {formatDateOnly(row.date)}
                 </span>
               )}
             </div>
@@ -567,11 +566,7 @@ function ExcelImportInner({ assets }: { assets: Asset[] }) {
                 </td>
                 <td className="px-4 py-3 text-sm text-muted-foreground">
                   {row.date
-                    ? new Date(row.date).toLocaleDateString("es-MX", {
-                        year: "numeric",
-                        month: "short",
-                        day: "numeric",
-                      })
+                    ? formatDateOnly(row.date)
                     : "—"}
                 </td>
                 <td className="px-4 py-3">

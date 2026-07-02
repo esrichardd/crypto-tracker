@@ -1,6 +1,7 @@
 import { db } from "@/lib/db";
 import { transactions } from "@/lib/db/schema";
 import { and, eq, gte, lte, sql } from "drizzle-orm";
+import { isDateOnlyString } from "@/lib/utils/dates";
 import type { TransactionFilters } from "../types";
 
 export type TransactionStats = {
@@ -18,9 +19,10 @@ export async function getTransactionStats(
 ): Promise<TransactionStats> {
   const conditions = [eq(transactions.userId, userId)];
   if (filters.type) conditions.push(eq(transactions.type, filters.type));
-  if (filters.from)
-    conditions.push(gte(transactions.date, new Date(filters.from)));
-  if (filters.to) conditions.push(lte(transactions.date, new Date(filters.to)));
+  if (filters.from && isDateOnlyString(filters.from))
+    conditions.push(gte(transactions.date, filters.from));
+  if (filters.to && isDateOnlyString(filters.to))
+    conditions.push(lte(transactions.date, filters.to));
 
   const rows = await db
     .select({

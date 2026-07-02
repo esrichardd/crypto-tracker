@@ -2,6 +2,7 @@ import { db } from "@/lib/db";
 import { transactions, assets } from "@/lib/db/schema";
 import { requireSession } from "@/lib/auth/server";
 import { and, eq, gte, lte, desc, asc, ilike, sql } from "drizzle-orm";
+import { isDateOnlyString } from "@/lib/utils/dates";
 import { TransactionTable } from "./TransactionTable";
 import type { TransactionFilters } from "../types";
 
@@ -18,9 +19,10 @@ export async function TransactionTableServer({
     conditions.push(eq(transactions.assetId, filters.assetId));
   if (filters.type) conditions.push(eq(transactions.type, filters.type));
   if (filters.source) conditions.push(eq(transactions.source, filters.source));
-  if (filters.from)
-    conditions.push(gte(transactions.date, new Date(filters.from)));
-  if (filters.to) conditions.push(lte(transactions.date, new Date(filters.to)));
+  if (filters.from && isDateOnlyString(filters.from))
+    conditions.push(gte(transactions.date, filters.from));
+  if (filters.to && isDateOnlyString(filters.to))
+    conditions.push(lte(transactions.date, filters.to));
   if (filters.search)
     conditions.push(ilike(assets.symbol, `%${filters.search}%`));
 

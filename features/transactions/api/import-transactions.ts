@@ -32,13 +32,13 @@ export async function importTransactionsAction(
     priceUsd: row.priceUsd,
     quantity: row.quantity,
     fee: row.fee ?? "0",
-    date: new Date(row.date),
+    date: row.date,
     notes: row.notes ?? null,
     source: "csv" as const,
     externalId: row.externalId,
   }));
 
-  // Insert all rows; duplicates (same source + externalId) are silently skipped.
+  // Insert all rows; duplicates for the same user/source/externalId are skipped.
   const result = await db
     .insert(transactions)
     .values(values)

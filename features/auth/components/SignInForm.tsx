@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { PasswordInput } from "./PasswordInput";
 import { GoogleAuthButton } from "./GoogleAuthButton";
 
-export function SignInForm() {
+export function SignInForm({ oauthError }: { oauthError?: string | null }) {
   const [state, formAction, isPending] = useActionState(signInWithEmail, null);
 
   return (
@@ -55,9 +55,9 @@ export function SignInForm() {
           />
         </div>
 
-        {state?.error && (
+        {(state?.error ?? oauthError) && (
           <p className="rounded-lg border border-danger/30 bg-danger/10 px-3 py-2 text-sm text-danger">
-            {state.error}
+            {state?.error ?? oauthError}
           </p>
         )}
 

@@ -6,27 +6,44 @@ import { authClient } from "@/lib/auth/client";
 
 export function GoogleAuthButton() {
   const [isPending, setIsPending] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   async function handleClick() {
     setIsPending(true);
-    await authClient.signIn.social({
+    setError(null);
+
+    const result = await authClient.signIn.social({
       provider: "google",
       callbackURL: "/",
+      errorCallbackURL: "/sign-in?error=oauth",
     });
-    setIsPending(false);
+
+    // If we reach here, the redirect didn't happen — something failed
+    if (result?.error) {
+      console.error("[Google OAuth]", result.error);
+      setError(result.error.message ?? "Error al iniciar sesión con Google.");
+      setIsPending(false);
+    }
   }
 
   return (
-    <Button
-      type="button"
-      variant="outline"
-      className="w-full gap-2"
-      onClick={handleClick}
-      disabled={isPending}
-    >
-      <GoogleIcon />
-      {isPending ? "Redirigiendo..." : "Continuar con Google"}
-    </Button>
+    <div className="flex flex-col gap-2">
+      <Button
+        type="button"
+        variant="outline"
+        className="w-full gap-2"
+        onClick={handleClick}
+        disabled={isPending}
+      >
+        <GoogleIcon />
+        {isPending ? "Redirigiendo..." : "Continuar con Google"}
+      </Button>
+      {error && (
+        <p className="rounded-lg border border-danger/30 bg-danger/10 px-3 py-2 text-sm text-danger">
+          {error}
+        </p>
+      )}
+    </div>
   );
 }
 

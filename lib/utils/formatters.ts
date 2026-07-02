@@ -1,3 +1,5 @@
+import { formatDateOnly } from "./dates";
+
 export function formatUSD(value: number): string {
   return new Intl.NumberFormat("en-US", {
     style: "currency",
@@ -20,9 +22,5 @@ export function formatPercent(value: number): string {
 }
 
 export function formatDate(date: Date | string): string {
-  return new Date(date).toLocaleDateString("es-MX", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
+  return formatDateOnly(date);
 }

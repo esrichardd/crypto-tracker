@@ -4,13 +4,13 @@ import { useState } from "react";
 import Image from "next/image";
 import { useRouter, usePathname } from "next/navigation";
 import { Trash2, ArrowUp, ArrowDown, ChevronLeft, ChevronRight } from "lucide-react";
+import { formatDateOnly } from "@/lib/utils/dates";
 import { formatUSD, formatCrypto } from "@/lib/utils/formatters";
 import { cn } from "@/lib/utils";
 import type { TransactionRow } from "../types";
 
-// When passed from a Server Component, Date fields are serialized as strings.
-type SerializedTransactionRow = Omit<TransactionRow, "date" | "createdAt"> & {
-  date: string | Date;
+// When passed from a Server Component, timestamp fields are serialized as strings.
+type SerializedTransactionRow = Omit<TransactionRow, "createdAt"> & {
   createdAt: string | Date;
 };
 
@@ -227,11 +227,7 @@ function TransactionTableInner({
                 <AssetCell asset={tx.asset} />
                 <TypeBadge type={tx.type} />
                 <span className="ml-auto text-[10px] text-secondary">
-                  {new Date(tx.date).toLocaleDateString("es-MX", {
-                    day: "numeric",
-                    month: "short",
-                    year: "numeric",
-                  })}
+                  {formatDateOnly(tx.date)}
                 </span>
               </div>
 
@@ -357,11 +353,7 @@ function TransactionTableInner({
                     <SourceBadge source={tx.source} />
                   </td>
                   <td className="px-4 py-3 text-sm text-muted-foreground">
-                    {new Date(tx.date).toLocaleDateString("es-MX", {
-                      year: "numeric",
-                      month: "short",
-                      day: "numeric",
-                    })}
+                    {formatDateOnly(tx.date)}
                   </td>
                   <td className="px-4 py-3 text-right">
                     <button

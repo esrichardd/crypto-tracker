@@ -1,6 +1,7 @@
 import { db } from "@/lib/db";
 import { transactions, assets } from "@/lib/db/schema";
 import { and, eq, gte, lte, desc } from "drizzle-orm";
+import { isDateOnlyString } from "@/lib/utils/dates";
 import type { TransactionFilters, TransactionRow } from "../types";
 
 export async function getTransactions(
@@ -14,9 +15,10 @@ export async function getTransactions(
   if (filters.assetId)
     conditions.push(eq(transactions.assetId, filters.assetId));
   if (filters.type) conditions.push(eq(transactions.type, filters.type));
-  if (filters.from)
-    conditions.push(gte(transactions.date, new Date(filters.from)));
-  if (filters.to) conditions.push(lte(transactions.date, new Date(filters.to)));
+  if (filters.from && isDateOnlyString(filters.from))
+    conditions.push(gte(transactions.date, filters.from));
+  if (filters.to && isDateOnlyString(filters.to))
+    conditions.push(lte(transactions.date, filters.to));
 
   const rows = await db
     .select({

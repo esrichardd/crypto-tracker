@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { importRowSchema } from "@/features/transactions/api/import-schema";
 import { importTransactionsAction } from "@/features/transactions/api/import-transactions";
+import { handleApiError } from "@/lib/api/handle-error";
 import { z } from "zod";
 
 const bodySchema = z.object({
@@ -9,11 +10,26 @@ const bodySchema = z.object({
 
 export async function POST(req: Request) {
   try {
-    const body = await req.json();
+    let body: unknown;
+    try {
+      body = await req.json();
+    } catch {
+      return NextResponse.json(
+        { error: "El cuerpo de la solicitud debe ser JSON valido." },
+        { status: 400 },
+      );
+    }
+
     const parsed = bodySchema.safeParse(body);
 
     if (!parsed.success) {
-      return NextResponse.json({ error: "Payload inválido." }, { status: 400 });
+      return NextResponse.json(
+        {
+          error: "Payload invalido.",
+          details: parsed.error.flatten().fieldErrors,
+        },
+        { status: 400 },
+      );
     }
 
     const result = await importTransactionsAction(parsed.data.rows);
@@ -23,7 +39,7 @@ export async function POST(req: Request) {
     }
 
     return NextResponse.json(result);
-  } catch {
-    return NextResponse.json({ error: "Error interno." }, { status: 500 });
+  } catch (err) {
+    return handleApiError(err);
   }
 }

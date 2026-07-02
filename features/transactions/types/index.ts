@@ -16,7 +16,7 @@ export type TransactionRow = {
   priceUsd: string;
   quantity: string;
   fee: string;
-  date: Date;
+  date: string;
   notes: string | null;
   source: "manual" | "binance" | "csv";
   createdAt: Date;
@@ -36,7 +36,7 @@ export type ImportPreviewRow = {
   priceUsd: string;
   quantity: string;
   fee: string;
-  date: string; // ISO string after normalisation
+  date: string; // YYYY-MM-DD after normalisation
   notes: string;
   assetId: string | null; // null = symbol not found in catalog
   error: string | null; // human-readable validation error, null = valid

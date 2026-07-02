@@ -7,6 +7,7 @@ import { ChevronDown, Search, ArrowUp, ArrowDown, X } from "lucide-react";
 import { createTransactionAction } from "../api/create-transaction-action";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
+import { todayDateOnly } from "@/lib/utils/dates";
 import { formatUSD } from "@/lib/utils/formatters";
 import type { Asset } from "@/lib/db/schema";
 
@@ -196,7 +197,7 @@ export function TransactionForm({ assets, onSuccess, onCancel }: Props) {
     priceUsd: "",
     quantity: "",
     fee: "",
-    date: new Date().toISOString().slice(0, 10),
+    date: todayDateOnly(),
     notes: "",
   });
 
@@ -221,7 +222,7 @@ export function TransactionForm({ assets, onSuccess, onCancel }: Props) {
         priceUsd: form.priceUsd,
         quantity: form.quantity,
         fee: form.fee || "0",
-        date: new Date(form.date + "T12:00:00").toISOString(),
+        date: form.date,
         notes: form.notes || undefined,
       });
 

@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { isDateOnlyString } from "@/lib/utils/dates";
 
 export const importRowSchema = z.object({
   assetId: z.string().min(1),
@@ -10,7 +11,7 @@ export const importRowSchema = z.object({
     .regex(/^\d+(\.\d+)?$/)
     .optional()
     .default("0"),
-  date: z.string().datetime({ offset: true }),
+  date: z.string().refine(isDateOnlyString, "Fecha invalida"),
   notes: z.string().max(500).optional(),
   externalId: z.string().min(1),
 });

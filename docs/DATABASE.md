@@ -32,7 +32,7 @@ One row per buy or sell operation logged by a user.
 | `price_usd`   | numeric     | Price per unit in USD at the time of the transaction (precision: 20, scale: 8)              |
 | `quantity`    | numeric     | Number of units bought or sold (precision: 20, scale: 8)                                    |
 | `fee`         | numeric     | Trading fee in USD. Defaults to `0` (precision: 20, scale: 8)                               |
-| `date`        | timestamptz | When the transaction occurred (user-provided, not necessarily `created_at`)                 |
+| `date`        | date        | Calendar day when the transaction occurred (`YYYY-MM-DD`, no timezone conversion)           |
 | `notes`       | text        | Optional free-text note from the user (nullable)                                            |
 | `source`      | enum        | How the transaction was created: `manual`, `binance`, or `csv`                              |
 | `external_id` | text        | External reference ID used for deduplication on Binance/CSV imports (nullable)              |
@@ -40,7 +40,7 @@ One row per buy or sell operation logged by a user.
 
 **Indexes:** `user_id`, `asset_id`, `date` — optimized for per-user queries and date-range filters.
 
-**Unique constraint:** `(source, external_id)` — prevents duplicate imports from the same external source.
+**Unique constraint:** `(user_id, source, external_id)` — prevents duplicate imports per user from the same external source.
 
 ---
 

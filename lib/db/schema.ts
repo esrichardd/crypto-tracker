@@ -3,6 +3,7 @@ import {
   text,
   numeric,
   timestamp,
+  date as pgDate,
   pgEnum,
   unique,
   index,
@@ -49,7 +50,7 @@ export const transactions = pgTable(
     priceUsd: numeric("price_usd", { precision: 20, scale: 8 }).notNull(),
     quantity: numeric("quantity", { precision: 20, scale: 8 }).notNull(),
     fee: numeric("fee", { precision: 20, scale: 8 }).default("0").notNull(),
-    date: timestamp("date", { withTimezone: true }).notNull(),
+    date: pgDate("date", { mode: "string" }).notNull(),
     notes: text("notes"),
     source: transactionSourceEnum("source").default("manual").notNull(),
     externalId: text("external_id"), // for dedup on Binance/CSV import
@@ -58,8 +59,8 @@ export const transactions = pgTable(
       .notNull(),
   },
   (table) => ({
-    // Prevent duplicate imports from same source
-    uniqueExternalId: unique().on(table.source, table.externalId),
+    // Prevent duplicate imports per user from same source
+    uniqueExternalId: unique().on(table.userId, table.source, table.externalId),
     // Fast queries by user
     userIdIdx: index("transactions_user_id_idx").on(table.userId),
     // Fast queries by asset

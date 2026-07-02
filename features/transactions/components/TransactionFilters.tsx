@@ -4,6 +4,7 @@ import { useRouter, usePathname } from "next/navigation";
 import { useState } from "react";
 import { Search, ArrowUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { dateOnlyFromLocalDate, todayDateOnly } from "@/lib/utils/dates";
 import type { TransactionFilters } from "../types";
 
 type Props = {
@@ -13,7 +14,7 @@ type Props = {
 // ─── Date helpers ─────────────────────────────────────────────────────────────
 
 function toDateStr(date: Date): string {
-  return date.toISOString().split("T")[0];
+  return dateOnlyFromLocalDate(date)!;
 }
 
 function daysAgo(n: number): string {
@@ -26,7 +27,7 @@ type Period = "hoy" | "7d" | "30d" | "90d" | "custom" | "";
 
 function detectPeriod(from?: string, to?: string): Period {
   if (!from && !to) return "";
-  const today = toDateStr(new Date());
+  const today = todayDateOnly();
   if (from === today && (!to || to === today)) return "hoy";
   if (from === daysAgo(7) && (!to || to === today)) return "7d";
   if (from === daysAgo(30) && (!to || to === today)) return "30d";
@@ -156,7 +157,7 @@ export function TransactionFilters({ current }: Props) {
       buildAndPush({ from: undefined, to: undefined });
       return;
     }
-    const today = toDateStr(new Date());
+    const today = todayDateOnly();
     const days: Record<string, number> = { hoy: 0, "7d": 7, "30d": 30, "90d": 90 };
     const newFrom = daysAgo(days[p] ?? 0);
     setFrom(newFrom);

@@ -23,7 +23,7 @@ export async function createTransaction(
       priceUsd: input.priceUsd,
       quantity: input.quantity,
       fee: input.fee ?? "0",
-      date: new Date(input.date),
+      date: input.date,
       notes: input.notes ?? null,
       source: "manual",
     })

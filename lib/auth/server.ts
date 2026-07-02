@@ -4,6 +4,9 @@ export const auth = createNeonAuth({
   baseUrl: process.env.NEON_AUTH_BASE_URL!,
   cookies: {
     secret: process.env.NEON_AUTH_COOKIE_SECRET!,
+    // SameSite=Lax is required for OAuth cross-site redirects.
+    // Default is "strict" which blocks the challenge cookie on the Neon → app redirect.
+    sameSite: "lax",
   },
 });
 
