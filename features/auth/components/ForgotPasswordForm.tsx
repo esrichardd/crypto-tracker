@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { PasswordInput } from "./PasswordInput";
 import { authClient } from "@/lib/auth/client";
+import { getAuthErrorMessage } from "@/lib/auth/errors";
 
 type Step = "email" | "otp";
 
@@ -27,7 +28,10 @@ export function ForgotPasswordForm() {
     setIsPending(false);
     if (error) {
       setError(
-        error.message ?? "No se pudo enviar el código. Intenta de nuevo.",
+        getAuthErrorMessage(
+          error,
+          "No se pudo enviar el código. Intenta de nuevo.",
+        ),
       );
       return;
     }
@@ -50,7 +54,10 @@ export function ForgotPasswordForm() {
     setIsPending(false);
     if (error) {
       setError(
-        error.message ?? "Código incorrecto o expirado. Intenta de nuevo.",
+        getAuthErrorMessage(
+          error,
+          "Código incorrecto o expirado. Intenta de nuevo.",
+        ),
       );
       return;
     }

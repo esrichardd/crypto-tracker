@@ -2,6 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth/server";
+import { getAuthErrorMessage } from "@/lib/auth/errors";
 import { db } from "@/lib/db";
 import { userProfiles } from "@/lib/db/schema";
 
@@ -34,7 +35,9 @@ export async function signUpWithEmail(
   });
 
   if (error) {
-    return { error: error.message || "No se pudo crear la cuenta." };
+    return {
+      error: getAuthErrorMessage(error, "No se pudo crear la cuenta."),
+    };
   }
 
   // Persist firstName + lastName to user profile if we got a userId back

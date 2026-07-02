@@ -4,6 +4,7 @@ import { getBinanceApiKey } from "../api/get-api-key";
 import { ProfileHero } from "./ProfileHero";
 import { ProfileForm } from "./ProfileForm";
 import { BinanceKeyForm } from "./BinanceKeyForm";
+import { AuthMethodsForm } from "./AuthMethodsForm";
 
 export async function ProfilePageServer() {
   const session = await requireSession();
@@ -21,6 +22,7 @@ export async function ProfilePageServer() {
         userEmail={session.user.email ?? null}
       />
       <ProfileForm profile={profile} />
+      <AuthMethodsForm userEmail={session.user.email ?? null} />
       <BinanceKeyForm existingKey={binanceKey} />
     </div>
   );

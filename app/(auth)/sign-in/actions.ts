@@ -1,6 +1,7 @@
 "use server";
 
 import { auth } from "@/lib/auth/server";
+import { getAuthErrorMessage } from "@/lib/auth/errors";
 import { redirect } from "next/navigation";
 
 export async function signInWithEmail(
@@ -13,7 +14,9 @@ export async function signInWithEmail(
   });
 
   if (error) {
-    return { error: error.message || "Correo o contraseña incorrectos." };
+    return {
+      error: getAuthErrorMessage(error, "Correo o contraseña incorrectos."),
+    };
   }
 
   redirect("/");

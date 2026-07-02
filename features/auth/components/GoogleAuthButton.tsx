@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { authClient } from "@/lib/auth/client";
+import { getAuthErrorMessage } from "@/lib/auth/errors";
 
 export function GoogleAuthButton() {
   const [isPending, setIsPending] = useState(false);
@@ -21,7 +22,9 @@ export function GoogleAuthButton() {
     // If we reach here, the redirect didn't happen — something failed
     if (result?.error) {
       console.error("[Google OAuth]", result.error);
-      setError(result.error.message ?? "Error al iniciar sesión con Google.");
+      setError(
+        getAuthErrorMessage(result.error, "Error al iniciar sesión con Google."),
+      );
       setIsPending(false);
     }
   }

@@ -3,6 +3,7 @@ import { ProfilePageServer } from "@/features/profile/components/ProfilePageServ
 import { ProfileHeroSkeleton } from "@/features/profile/components/ProfileHero";
 import { ProfileForm } from "@/features/profile/components/ProfileForm";
 import { BinanceKeyForm } from "@/features/profile/components/BinanceKeyForm";
+import { AuthMethodsForm } from "@/features/profile/components/AuthMethodsForm";
 
 export default function PerfilPage() {
   return (
@@ -19,6 +20,7 @@ export default function PerfilPage() {
           <div className="flex flex-col gap-5">
             <ProfileHeroSkeleton />
             <ProfileForm skeleton />
+            <AuthMethodsForm skeleton />
             <BinanceKeyForm skeleton />
           </div>
         }
