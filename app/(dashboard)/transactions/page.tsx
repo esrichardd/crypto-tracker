@@ -9,6 +9,7 @@ import { TransactionTable } from "@/features/transactions/components/Transaction
 import { TransactionTableServer } from "@/features/transactions/components/TransactionTableServer";
 import { TransactionStats } from "@/features/transactions/components/TransactionStats";
 import { TransactionSheet } from "@/features/transactions/components/TransactionSheet";
+import { TransactionExport } from "@/features/transactions/components/TransactionExport";
 import type { TransactionFilters as Filters } from "@/features/transactions/types";
 
 const VALID_TYPES = ["buy", "sell"] as const;
@@ -59,6 +60,7 @@ export default async function TransactionsPage({ searchParams }: PageProps) {
           Transacciones
         </h1>
         <div className="flex items-center gap-2">
+          <TransactionExport filters={filters} />
           <Link href="/transactions/import">
             <Button
               size="sm"
